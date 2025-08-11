@@ -15,7 +15,6 @@ if [ ! -f $HOME/.zoomeye_api_key ]; then
     echo "to copy your API key. Create a text file named .zoomeye_api_key"
     echo "in your home directory and you're ready to go."
     echo '(ex: echo "fCc692-618abDd-This-Is-Not-A-Real-Key-722b" > ~/.zoomeye_api_key)'
-    echo "Alternatively, you can alter this script and set your key as the permanent value of the second variable on line 3."
     exit 1
 fi
 if [ ! command -v base64 ]; then
