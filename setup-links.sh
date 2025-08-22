@@ -58,6 +58,7 @@ ln -s $topdir/targeting/ip-range-scan.sh $HOME/.local/bin/nokia-ip-range-scan &&
 ln -s $topdir/exploitation/autopwn.sh $HOME/.local/bin/nokia-autopwn && echo "nokia-autopwn linked"
 ln -s $topdir/exploitation/decrypt-all.sh $HOME/.local/bin/nokia-decrypt-all && echo "nokia-decrypt-all linked"
 ln -s $topdir/exploitation/nokia-use-ip-cfg $HOME/.local/bin/nokia-use-ip-cfg && echo "nokia-use-ip-cfg linked"
+ln -s $topdir/exploitation/nokia-connect $HOME/.local/bin/nokia-connect && echo "nokia-connect linked"
 ln -s $topdir/exploitation/nokia-xml-editor $HOME/.local/bin/nokia-xml-editor && echo "nokia-xml-editor linked"
 ln -s $topdir/exploitation/print-all.sh $HOME/.local/bin/nokia-print-all && echo "nokia-print-all linked"
 ln -s $topdir/post_exploitation/file_transfer.sh $HOME/.local/bin/nokia-file-transfer && echo "nokia-file-transfer linked"
