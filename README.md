@@ -28,21 +28,21 @@ built and are located somewhere along the user's $PATH.
 
 The compiled binaries in *Post-exploitation* - dropbearmulti, 
 busybox, dirtyc0w, and some experimental binaries from 
-[Medusa Embedded Toolkit](https://github.com/CyberDanube/medusa-embedded-toolkit\), have been statically compiled 
+[Medusa Embedded Toolkit](https://github.com/CyberDanube/medusa-embedded-toolkit), have been statically compiled 
 to be run on three target architectures. Two of these are MIPS: 
 big and little endian, the other is ARMv7 using the \"soft float\"
 configuration \(arm-linux-gnueabi\).
 The script used to modify the configuration, `nokia-use-ip-cfg` 
-\(itself a modified version of [this script](https://gist.githubusercontent.com/rajkosto/e2b2455d457cc2be82dbb5c85e22d708/raw/f851ccbfe0c2466e21e48e5fafe639c0dd0f2eba/nokia-router-cfg-tool.py\)\) will also tell you
+\(itself a modified version of [this script](https://gist.githubusercontent.com/rajkosto/e2b2455d457cc2be82dbb5c85e22d708/raw/f851ccbfe0c2466e21e48e5fafe639c0dd0f2eba/nokia-router-cfg-tool.py) \)will also tell you
 the endianness of the device it came from. If it says it's 
 big endian, it can only be MIPS. The script `nokia-xml-editor`
 will look for the device name, and you can check that against the
 file `nokia_cpu_list.txt`, or simply log in once the device is
 exploited and run `cat /proc/cpuinfo`.
 
-Tbe code for dirtyc0w has been included and comes from [here.](https://raw.githubusercontent.com/dirtycow/dirtycow.github.io/refs/heads/master/dirtyc0w.c\)
+Tbe code for dirtyc0w has been included and comes from [here.](https://raw.githubusercontent.com/dirtycow/dirtycow.github.io/refs/heads/master/dirtyc0w.c)
 The code for Busybox and dropbear would have made this repo enormous,
-but you can find Busybox [here](https://github.com/mirror/busybox\) and Dropbear [here](https://github.com/mkj/dropbear\).
+but you can find Busybox [here](https://github.com/mirror/busybox) and Dropbear [here](https://github.com/mkj/dropbear).
 
 ## HOW IT WORKS 
 
