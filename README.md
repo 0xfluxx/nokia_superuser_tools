@@ -12,9 +12,11 @@ G-2425G-B, G-2426G-A.
 This repo has been divided into three sections:
 
 -*Targeting*: finding vulnerable devices exposed to WAN
+
 -*Exploitation*: unpacking, rewriting, and repacking the 
     configuration files from target devices to allow 
     root access over SSH
+    
 -*Post-exploitation*: changing internal settings on target
     devices to maintain remote root access 
 
