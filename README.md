@@ -155,7 +155,7 @@ That's a huge pain to build a toolchain for in modern times,
 so in order to produce working and updated binaries, they have 
 been statically linked. \(Even maintainers of these devices using
 the official propietary toolchains struggle to get them to work: 
-see https://github.com/lxc/lxc/issues/3440\).
+see https://github.com/lxc/lxc/issues/3440 \).
 
 The issue with static binaries is obvious -- they use more disk
 space than dynamically linked binaries, and these are devices
