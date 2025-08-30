@@ -12,9 +12,11 @@ G-2425G-B, G-2426G-A.
 This repo has been divided into three sections:
 
 -*Targeting*: finding vulnerable devices exposed to WAN
+
 -*Exploitation*: unpacking, rewriting, and repacking the 
     configuration files from target devices to allow 
     root access over SSH
+    
 -*Post-exploitation*: changing internal settings on target
     devices to maintain remote root access 
 
@@ -28,21 +30,21 @@ built and are located somewhere along the user's $PATH.
 
 The compiled binaries in *Post-exploitation* - dropbearmulti, 
 busybox, dirtyc0w, and some experimental binaries from 
-[Medusa Embedded Toolkit](https://github.com/CyberDanube/medusa-embedded-toolkit\), have been statically compiled 
+[Medusa Embedded Toolkit](https://github.com/CyberDanube/medusa-embedded-toolkit), have been statically compiled 
 to be run on three target architectures. Two of these are MIPS: 
 big and little endian, the other is ARMv7 using the \"soft float\"
 configuration \(arm-linux-gnueabi\).
 The script used to modify the configuration, `nokia-use-ip-cfg` 
-\(itself a modified version of [this script](https://gist.githubusercontent.com/rajkosto/e2b2455d457cc2be82dbb5c85e22d708/raw/f851ccbfe0c2466e21e48e5fafe639c0dd0f2eba/nokia-router-cfg-tool.py\)\) will also tell you
+\(itself a modified version of [this script](https://gist.githubusercontent.com/rajkosto/e2b2455d457cc2be82dbb5c85e22d708/raw/f851ccbfe0c2466e21e48e5fafe639c0dd0f2eba/nokia-router-cfg-tool.py) \)will also tell you
 the endianness of the device it came from. If it says it's 
 big endian, it can only be MIPS. The script `nokia-xml-editor`
 will look for the device name, and you can check that against the
 file `nokia_cpu_list.txt`, or simply log in once the device is
 exploited and run `cat /proc/cpuinfo`.
 
-Tbe code for dirtyc0w has been included and comes from [here.](https://raw.githubusercontent.com/dirtycow/dirtycow.github.io/refs/heads/master/dirtyc0w.c\)
+Tbe code for dirtyc0w has been included and comes from [here.](https://raw.githubusercontent.com/dirtycow/dirtycow.github.io/refs/heads/master/dirtyc0w.c)
 The code for Busybox and dropbear would have made this repo enormous,
-but you can find Busybox [here](https://github.com/mirror/busybox\) and Dropbear [here](https://github.com/mkj/dropbear\).
+but you can find Busybox [here](https://github.com/mirror/busybox) and Dropbear [here](https://github.com/mkj/dropbear).
 
 ## HOW IT WORKS 
 
@@ -153,7 +155,7 @@ That's a huge pain to build a toolchain for in modern times,
 so in order to produce working and updated binaries, they have 
 been statically linked. \(Even maintainers of these devices using
 the official propietary toolchains struggle to get them to work: 
-see https://github.com/lxc/lxc/issues/3440\).
+see https://github.com/lxc/lxc/issues/3440 \).
 
 The issue with static binaries is obvious -- they use more disk
 space than dynamically linked binaries, and these are devices
@@ -172,29 +174,37 @@ to work most consistently is to do so through SSH. The script `file_transfer.sh`
 to both download and upload files from exploited devices. You can invoke it
 with either -s flag for send or -g flag for get using this syntax:
 
-`nokia-file-transfer -\[sg\] filename ip_address port`
+`nokia-file-transfer -[sg] filename ip_address port`
 
 ## SCRIPTS 
  
 `fix-mount`
+
    Find which mount points have nodev, noexec, and/or nosuid tags and remove them 
+
 `fix-ssh`
+
    runs the new dropbear server on port 2244
+
 `update-profile`
-   Runs in the background rewriting /etc/profile and /etc/home/ONTUSER/.bashprofile  
-   with desirable parameters   \(to execute as a background process, append & \)
+
+   Runs in the background rewriting /etc/profile and /etc/home/ONTUSER/.bashprofile  with desirable parameters  \(to execute as a background process, append & \)
+
 `update-iptables`
-   changes iptables policies to be as permissive as possible 
-   without breaking connectivity 
+
+   changes iptables policies to be as permissive as possible without breaking connectivity 
+
 `new-seconf`
-   uses dirtyc0w exploit to rewrite read-only file 
-   /usr/etc/se.conf with security disabled
+
+   uses dirtyc0w exploit to rewrite read-only file /usr/etc/se.conf with security disabled
+
 `new-guardian`
-   uses dirtyc0w exploit to rewrite read-only file 
-   /usr/exe/data_guardian.sh and allow modifications 
+
+   uses dirtyc0w exploit to rewrite read-only file /usr/exe/data_guardian.sh and allow modifications 
+
 `chungus-web`
-   mounts a tmpfs on top of /webs, copies the gpon home chungus webpage to it, 
-   and runs busybox httpd instead of thttpd pointing to it
+
+   mounts a tmpfs on top of /webs, copies the gpon home chungus webpage to it, and runs busybox httpd instead of thttpd pointing to it
 
 ## DISCLAIMER
 
