@@ -1,5 +1,5 @@
-#Nokia Superuser Tools
-###Scripts, binaries and guide for finding, rooting, and bypassing 
+# Nokia Superuser Tools
+### Scripts, binaries and guide for finding, rooting, and bypassing 
 security protocols to maintain persistent access to Nokia ONT devices.  
 
 vulnerable models \(known\):  G-0425G-A, G-0425G-C, G-120W-F, 
@@ -7,7 +7,7 @@ G-140W-C, G-140W-G, G-140W-H,  G-1425G-A, G-1425G-B, G-240G-E,
 G-240W-C, G-240W-F, G-240W-G,  G-240W-J, G-241W-A, G-2425G-A, 
 G-2425G-B, G-2426G-A.
 
-##OVERVIEW
+## OVERVIEW
 
 This repo has been divided into three sections:
 
@@ -29,22 +29,22 @@ built and are located somewhere along the user's $PATH.
 The compiled binaries in *Post-exploitation* - dropbearmulti, 
 busybox, dirtyc0w, and some experimental binaries from 
 [Medusa Embedded Toolkit](https://github.com/CyberDanube/medusa-embedded-toolkit\), have been statically compiled 
-to be run on four target architectures. Two of these are MIPS: 
-big and little endian. The other two are ARMv7, hard-float and 
-"soft float" \(called endian-little or armel\).
+to be run on three target architectures. Two of these are MIPS: 
+big and little endian, the other is ARMv7 using the \"soft float\"
+configuration \(arm-linux-gnueabi\).
 The script used to modify the configuration, `nokia-use-ip-cfg` 
 \(itself a modified version of [this script](https://gist.githubusercontent.com/rajkosto/e2b2455d457cc2be82dbb5c85e22d708/raw/f851ccbfe0c2466e21e48e5fafe639c0dd0f2eba/nokia-router-cfg-tool.py\)\) will also tell you
 the endianness of the device it came from. If it says it's 
-big endian, it can only be MIPS, as both ARM architectures 
-are little endian. However, if it detects little endian, once 
-you have logged in via SSH, you will have to check `/proc/cpuinfo` 
-to determine the processor and board type.
+big endian, it can only be MIPS. The script `nokia-xml-editor`
+will look for the device name, and you can check that against the
+file `nokia_cpu_list.txt`, or simply log in once the device is
+exploited and run `cat /proc/cpuinfo`.
 
 Tbe code for dirtyc0w has been included and comes from [here.](https://raw.githubusercontent.com/dirtycow/dirtycow.github.io/refs/heads/master/dirtyc0w.c\)
 The code for Busybox and dropbear would have made this repo enormous,
 but you can find Busybox [here](https://github.com/mirror/busybox\) and Dropbear [here](https://github.com/mkj/dropbear\).
 
-##HOW IT WORKS 
+## HOW IT WORKS 
 
 The usual method for configuring these devices is through an HTTP 
 interface, served locally over port 80, but frequently exposed to the
@@ -98,15 +98,15 @@ other Nokia routers have their login pages exposed. Typically, if the
 hardcoded credentials work on one of them, they will work on all \(or almost all\) 
 of the devices installed by the same ISP.  
 
-##EXPLOITATION
+## EXPLOITATION
 
 Once authentication on a vulnerable device is achieved and the config.cfg 
-file has been saved to the standard download directory, autopwn.sh can be 
+file has been saved to the standard download directory, `autopwn.sh` can be 
 used to unpack, modify, and repack this file in a matter of seconds, 
 saving it as "dropbear" in the same directory that config.cfg was downloaded to. 
 Uploading this file to the device will allow you root access via SSH.
 
-decrypt-all.sh should probably be called something else as the  "encryption"
+`decrypt-all.sh` should probably be called something else as the  "encryption"
 used for sensitive values in many of the .xml files is really more of an 
 encoding than true encryption. More to the point, this script allows you 
 to quickly strip out all of the values that Nokia deemed sensitive and 
@@ -118,7 +118,7 @@ algorithms \(identifiable by their format beginning with a number between
 1 and 5 followed by $ and a string of 32 or 64 characters\). 
 If you wish to decrypt such values, we recommend using hashcat. 
 
-Although nokia-xml-editor sets the standard SSH port of 22 for incoming connections, 
+Although `nokia-xml-editor` sets the standard SSH port of 22 for incoming connections, 
 iptables rules present on the vast majority of vulnerable devices will only 
 allow connections to SSH over WAN using port 8022. For LAN-accessible devices, 
 port 22 should work with no issues.  After uploading the altered config file 
@@ -127,38 +127,33 @@ for it to come back online. Once the device is back online, access with the
 nokia-connect script, using the IP address and port as arguments 1 and 2.
 
 
-##POST-EXPLOITATION 
+## POST-EXPLOITATION 
 
 The two most common architectures for these SoCs are MIPS little endian
 (mipsle-linux-uclibc\) and ARM endian little \(arm-linux-gnueabi\), 
 typically MIPS 1004k and ARMv7l \(Cortex9, no hard float\).
 
 Consequently, mipsle and armel have taken priority for static cross-compilation.
-There are binaries included for MIPS big endian and ARM hard float devices, but
-fewer of them \(no static busybox/dropbearmulti, for example\). 
+There are binaries included for MIPS big endian, but fewer of them. 
 dirtyc0w, fortunately, is available for all architectures.
 
 Even the unrestricted shell has some restrictions -- at first. 
-These devices run a variety of Linux kernels - 3.4, 3.18.21, 4.1.45 have all 
+These devices run a variety of Linux kernels - 3.4.19, 3.18.21, 4.1.45 have all 
 been observed - but what all of them have in common is vulnerability 
-to a race condition in copy-on-write, exploited as "dirtyc0w". 
+to a race condition in copy-on-write, exploited as `dirtyc0w`. 
 This allows changes to read-only files stored on the root squashfs 
 filesystem  \(although these changes will not persist after a reboot\).
   
 Most of the post_exploitation scripts do not require any binaries 
 except those found by default on the devices, and should work 
-regardless of the CPU type present. Endianness is determined 
-and displayed during the unpacking of the config.cfg file. 
-armv7l is always little endian, so any result showing big endian 
-can be safely assumed to indicate MIPS. Once in the root shell, 
-examine /proc/cpuinfo to find which architecture/SoC the device contains.
+regardless of the CPU type present.
 
-The devices built around mipsle still use uclibc-0.9.33.2 \(from 2012\). 
+The devices using MIPS and MIPSel still use uclibc-0.9.33.2 \(from 2012\). 
 That's a huge pain to build a toolchain for in modern times,
 so in order to produce working and updated binaries, they have 
 been statically linked. \(Even maintainers of these devices using
 the official propietary toolchains struggle to get them to work: 
-see https://github.com/lxc/lxc/issues/3440\).  
+see https://github.com/lxc/lxc/issues/3440\).
 
 The issue with static binaries is obvious -- they use more disk
 space than dynamically linked binaries, and these are devices
@@ -171,76 +166,15 @@ On devices that have /flash present, the recommendation is to
 extract the tarball there, then make symbolic links for /flash/bin
 at /configs/bin and /flash/chungus at /logs/chungus.
 
-There are several ways to get these files onto the target device,
-as their stock firmware contains curl, wget, nc, and plenty of 
-other fun tools \(including tcpdump\). \(They are badly deprecated 
-versions, so make sure to check syntax\).
+The method of uploading files to these devices that has been found
+to work most consistently is to do so through SSH. The script `file_transfer.sh`
+\(linked by the `setup-links.sh` script as `nokia-file-transfer`\) uses this method
+to both download and upload files from exploited devices. You can invoke it
+with either -s flag for send or -g flag for get using this syntax:
 
-In some cases, files larger than ~400K fail to upload over WAN. 
-You can split and then concatenate the files, compress with bzip2/gzip,
-or both. \(Make sure to get iptables to accept connections on the target 
-device before beginning this process\).  Only do this if necessary - 
-some devices will accept everything in both scripts and the appropriate 
-bins directory as one big tarball.
+`nokia-file-transfer -\[sg\] filename ip_address port`
 
-ex:
-
-`user:~:$ nokia-connect xx.xx.xx.xx 8022
-Connecting to xx.xx.xx.xx on port 8022
-Login fail count since last successful login: 1205
-Last successful login date and time: Date:1969-12-31 Time:19:05:02
-[root@AONT: ONTUSER]# df -h
-Filesystem                Size      Used Available Use% Mounted on
-/dev/root                22.4M     22.4M         0 100% /
-devtmpfs                113.2M         0    113.2M   0% /dev
-tmpfs                   113.2M      4.0M    109.1M   4% /tmp
-tmpfs                   113.2M         0    113.2M   0% /dev
-tmpfs                    32.0M    656.0K     31.4M   2% /etc
-tmpfs                   113.2M         0    113.2M   0% /dev/shm
-tmpfs                   113.2M         0    113.2M   0% /mnt
-/var                    113.2M     56.0K    113.1M   0% /var
-/dev/ubi1_0               8.2M      6.5M      1.2M  84% /logs
-/dev/ubi0_0               4.7M    464.0K      4.0M  10% /configs
-/dev/ubi2_0              96.2M     28.0K     91.5M   0% /flash
-tmpfs                     2.0M     64.0K      1.9M   3% /userfs
-none                    113.2M         0    113.2M   0% /sys/fs/cgroup
-[root@AONT: ONTUSER]# cd /flash
-[root@AONT: /flash]# head /proc/cpuinfo
-system type		: EcoNet EN7528 SOC
-machine			: econet,en751221
-processor		: 0
-cpu model		: MIPS 1004Kc V2.15
-BogoMIPS		: 591.87
-wait instruction	: yes
-microsecond timers	: yes
-tlb_entries		: 32
-extra interrupt vector	: yes
-hardware watchpoint	: yes, count: 4, address/irw mask: [0x0ffc, 0x0ffc, 0x0ffb, 0x0ffb]
-
-user:~:$ cd nokia_superuser_tools/post_exploitation
-user:~/nokia_superuser_tools/post_exploitation:$ ./make_tarball.sh mipsle
-Include experimental binaries? (y/N) y
-Tarball mipsle.tgz created
-
-[root@AONT: /flash]# iptables -P INPUT ACCEPT
-[root@AONT: /flash]# iptables -I INPUT -p tcp --dport 4545 -j ACCEPT
-[root@AONT: /flash]# nc -l -p 4545 > mipsle.tgz < /dev/null
-
-user:~/nokia_superuser_tools/post_exploitation:$ cat mipsle.tgz | nc xx.xx.xx.xx 4545
-user:~/nokia_superuser_tools/post_exploitation:$ md5sum mipsle.tgz
-19f7ae8fbb5e20a0f1b9f7568f4a81aa  mipsle.tgz
-
-[root@AONT: /flash]# md5sum mipsle.tgz
-19f7ae8fbb5e20a0f1b9f7568f4a81aa  mipsle.tgz
-
-[root@AONT: /flash]# tar xzf mipsle.tgz
-[root@AONT: /flash]# ln -s /flash/bin /configs/bin
-[root@AONT: /flash]# ln -s /flash/chungus /logs/chungus
-[root@AONT: /flash]# export PATH=/configs/bin:$PATH
-[root@AONT: /flash]# busybox-install-applets.sh && dropbear-symlinks.sh`
-
-
-##SCRIPTS 
+## SCRIPTS 
  
 `fix-mount`
    Find which mount points have nodev, noexec, and/or nosuid tags and remove them 
@@ -262,7 +196,7 @@ user:~/nokia_superuser_tools/post_exploitation:$ md5sum mipsle.tgz
    mounts a tmpfs on top of /webs, copies the gpon home chungus webpage to it, 
    and runs busybox httpd instead of thttpd pointing to it
 
-##DISCLAIMER
+## DISCLAIMER
 
 The fact of the matter is that all of the security issues on these devices can 
 be fixed without replacing any hardware. There are routers with the exact 
