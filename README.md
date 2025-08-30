@@ -174,7 +174,7 @@ to work most consistently is to do so through SSH. The script `file_transfer.sh`
 to both download and upload files from exploited devices. You can invoke it
 with either -s flag for send or -g flag for get using this syntax:
 
-`nokia-file-transfer -\[sg\] filename ip_address port`
+`nokia-file-transfer -[sg] filename ip_address port`
 
 ## SCRIPTS 
  
