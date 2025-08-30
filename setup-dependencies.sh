@@ -7,7 +7,7 @@ echo "This will build dependencies from source, which may take a considerable am
 echo "You will need a C/C++ compiler (preferably GCC), Golang, and Cargo (rust) installed to do this, plus any libraries required for each build."
 echo "You will also need python3, git, and GNU make installed."
 echo "Alternatively, you can search your package manager for compiled binaries of these dependencies:"
-printf "${green}ipinfo		nmap		python3 + pycryptodome		urlencode		${clear_color}\n""
+printf "${green}ipinfo		nmap		python3 + pycryptodome		urlencode		${clear_color}\n"
 sleep 6
 printf "Checking for C compiler... "
 if command -v cc &> /dev/null; then
