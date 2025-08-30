@@ -6,7 +6,8 @@ clear_color='\033[0m'
 echo "This will build dependencies from source, which may take a considerable amount of time depending on your system."
 echo "You will need a C/C++ compiler (preferably GCC), Golang, and Cargo (rust) installed to do this, plus any libraries required for each build."
 echo "You will also need python3, git, and GNU make installed."
-echo "Alternatively, you can search your package manager for compiled binaries of these dependencies."
+echo "Alternatively, you can search your package manager for compiled binaries of these dependencies:"
+printf "${green}ipinfo		nmap		python3 + pycryptodome		urlencode		${clear_color}\n""
 sleep 6
 printf "Checking for C compiler... "
 if command -v cc &> /dev/null; then
@@ -26,41 +27,41 @@ else
 fi
 printf "Checking for Go compiler... "
 if command -v go &> /dev/null; then
-    echo "yes"
+    printf "${green}yes${clear_color}\n"
 else
-    echo "no" 
+    printf "${red}no${clear_color}\n"
     echo "Please install Golang"
     exit 1
 fi
 printf "Checking for Cargo (Rust package manager)... "
 if command -v cargo &> /dev/null; then
-    echo "yes"
+    printf "${green}yes${clear_color}\n"
 else
-    echo "no"
+    printf "${red}no${clear_color}\n"
     echo "Please install Rust"
     exit 1
 fi
 printf "Checking for Python3..."
 if command -v python3 &> /dev/null; then
-    echo "yes"
+    printf "${green}yes${clear_color}\n"
 else
-    echo "no"
+    printf "${red}no${clear_color}\n"
     echo "Please install python3"
     exit 1
 fi
 printf "Checking for make..."
 if command -v make &> /dev/null; then
-    echo "yes"
+    printf "${green}yes${clear_color}\n"
 else
-    echo "no"
+    printf "${red}no${clear_color}\n"
     echo "Please install make"
     exit 1
 fi
 printf "Checking for git..."
 if command -v git &> /dev/null; then
-    echo "yes"
+    printf "${green}yes${clear_color}\n"
 else
-    echo "no"
+    printf "${red}no${clear_color}\n"
     echo "Please install git"
     exit 1
 fi
@@ -84,7 +85,7 @@ if command -v ipinfo &> /dev/null; then
 else
     echo "Building ipinfo"
     cd $HOME
-    if [ ! -d ipinfo-cli; then
+    if [ ! -d ipinfo-cli ]; then
         git clone https://github.com/ipinfo/cli ipinfo-cli
         cd ipinfo-cli
     else
