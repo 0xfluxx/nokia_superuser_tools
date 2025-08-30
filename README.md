@@ -179,24 +179,32 @@ with either -s flag for send or -g flag for get using this syntax:
 ## SCRIPTS 
  
 `fix-mount`
+
    Find which mount points have nodev, noexec, and/or nosuid tags and remove them 
+
 `fix-ssh`
+
    runs the new dropbear server on port 2244
+
 `update-profile`
-   Runs in the background rewriting /etc/profile and /etc/home/ONTUSER/.bashprofile  
-   with desirable parameters   \(to execute as a background process, append & \)
+
+   Runs in the background rewriting /etc/profile and /etc/home/ONTUSER/.bashprofile  with desirable parameters  \(to execute as a background process, append & \)
+
 `update-iptables`
-   changes iptables policies to be as permissive as possible 
-   without breaking connectivity 
+
+   changes iptables policies to be as permissive as possible without breaking connectivity 
+
 `new-seconf`
-   uses dirtyc0w exploit to rewrite read-only file 
-   /usr/etc/se.conf with security disabled
+
+   uses dirtyc0w exploit to rewrite read-only file /usr/etc/se.conf with security disabled
+
 `new-guardian`
-   uses dirtyc0w exploit to rewrite read-only file 
-   /usr/exe/data_guardian.sh and allow modifications 
+
+   uses dirtyc0w exploit to rewrite read-only file /usr/exe/data_guardian.sh and allow modifications 
+
 `chungus-web`
-   mounts a tmpfs on top of /webs, copies the gpon home chungus webpage to it, 
-   and runs busybox httpd instead of thttpd pointing to it
+
+   mounts a tmpfs on top of /webs, copies the gpon home chungus webpage to it, and runs busybox httpd instead of thttpd pointing to it
 
 ## DISCLAIMER
 
