@@ -2,7 +2,7 @@
 #this is a non-privileged setup script to make links for these scripts available in $HOME/.local/bin
 topdir="$HOME/nokia_superuser_tools"
 if [ "$EUID" -eq 0 ]; then
-	echo "You don't need to run this as root -- it's not for system-wide installation"
+	echo "You don't need to run this as root -- it's not for system-wide installation" #but you can if you want to
     sleep 4
     echo "Continuing..."
 fi
@@ -52,16 +52,36 @@ if [ "$local_bin_in_path" != 0 ]; then
 fi
 #make the links already
 make_links() {
-ln -s $topdir/targeting/zoomeye.sh $HOME/.local/bin/nokia-zoomeye && echo "nokia-zoomeye linked"
-ln -s $topdir/targeting/host-back-online.sh $HOME/.local/bin/nokia-back-online && echo "nokia-back-online linked"
-ln -s $topdir/targeting/ip-range-scan.sh $HOME/.local/bin/nokia-ip-range-scan && echo "nokia-ip-range-scan linked"
-ln -s $topdir/exploitation/autopwn.sh $HOME/.local/bin/nokia-autopwn && echo "nokia-autopwn linked"
-ln -s $topdir/exploitation/decrypt-all.sh $HOME/.local/bin/nokia-decrypt-all && echo "nokia-decrypt-all linked"
-ln -s $topdir/exploitation/nokia-use-ip-cfg $HOME/.local/bin/nokia-use-ip-cfg && echo "nokia-use-ip-cfg linked"
-ln -s $topdir/exploitation/nokia-connect $HOME/.local/bin/nokia-connect && echo "nokia-connect linked"
-ln -s $topdir/exploitation/nokia-xml-editor $HOME/.local/bin/nokia-xml-editor && echo "nokia-xml-editor linked"
-ln -s $topdir/exploitation/print-all.sh $HOME/.local/bin/nokia-print-all && echo "nokia-print-all linked"
-ln -s $topdir/post_exploitation/file_transfer.sh $HOME/.local/bin/nokia-file-transfer && echo "nokia-file-transfer linked"
+if [ ! -f $HOME/.local/bin/nokia-zoomeye ]; then
+	ln -s $topdir/targeting/zoomeye.sh $HOME/.local/bin/nokia-zoomeye && echo "nokia-zoomeye linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-back-online ]; then
+	ln -s $topdir/targeting/host-back-online.sh $HOME/.local/bin/nokia-back-online && echo "nokia-back-online linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-ip-range-scan ]; then
+	ln -s $topdir/targeting/ip-range-scan.sh $HOME/.local/bin/nokia-ip-range-scan && echo "nokia-ip-range-scan linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-autopwn ]; then
+	ln -s $topdir/exploitation/autopwn.sh $HOME/.local/bin/nokia-autopwn && echo "nokia-autopwn linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-decrypt-all ]; then
+	ln -s $topdir/exploitation/decrypt-all.sh $HOME/.local/bin/nokia-decrypt-all && echo "nokia-decrypt-all linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-use-ip-cfg ]; then
+	ln -s $topdir/exploitation/nokia-use-ip-cfg $HOME/.local/bin/nokia-use-ip-cfg && echo "nokia-use-ip-cfg linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-connect ]; then
+	ln -s $topdir/exploitation/nokia-connect $HOME/.local/bin/nokia-connect && echo "nokia-connect linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-xml-editor ]; then
+	ln -s $topdir/exploitation/nokia-xml-editor $HOME/.local/bin/nokia-xml-editor && echo "nokia-xml-editor linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-print-all ]; then
+	ln -s $topdir/exploitation/print-all.sh $HOME/.local/bin/nokia-print-all && echo "nokia-print-all linked"
+fi
+if [ ! -f $HOME/.local/bin/nokia-file-transfer ]; then
+	ln -s $topdir/post_exploitation/file_transfer.sh $HOME/.local/bin/nokia-file-transfer && echo "nokia-file-transfer linked"
+fi
 }
 make_links || echo "Something went wrong!" && exit 1
 exit 0

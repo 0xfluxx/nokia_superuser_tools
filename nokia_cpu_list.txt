@@ -1,5 +1,5 @@
 DeviceName	Arch	SOCName		ProcessorName		    	Kernel
-G-0425G-A
+G-0425G-A	
 G-0425G-B   	MIPSel  EN7528      	MIPS 1004Kc V2.15           	3.18.21
 G-120W-F	MIPS	EN751221	MIPS 34Kc V5.8			3.18.21
 G-140W-C	MIPS	EN751221	MIPS 34Kc V5.8			3.18.21
