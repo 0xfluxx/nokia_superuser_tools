@@ -1,48 +1,42 @@
 #!/usr/bin/env python3
-'''
-THIS IS A WORK IN PROGRESS -- IT'S NOT WORKING YET
-of course if you want to make it work and then open a pull request, that would be cool
-otherwise, STFU
---management
-'''
+import pytest
+import time
+import json
 import sys
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 nokia = sys.argv[1]
 
-CHROMEDRIVER_PATH = '/usr/bin/chromedriver'
+class TestConfigget():
+  def setup_method(self, method):
+    self.driver = webdriver.Firefox()
+    self.vars = {}
+  
+  def teardown_method(self, method):
+    self.driver.quit()
+  
+  def test_configget(self):
+    self.driver.get("https://{nokia}/login.cgi")
+    self.driver.implicitly_wait(10)
+    self.driver.find_element(By.ID, "username").send_keys("AdminGPON")
+    self.driver.find_element(By.ID, "password").send_keys("ALC#FGU")
+    self.driver.find_element(By.NAME, "loginBT").click()
+    self.driver.implicitly_wait(10)
+    self.driver.get("https://{nokia}/usb.cgi?backup")
+    self.driver.find_element(By.CSS_SELECTOR, ".buttonText").click()
+    self.driver.find_element(By.ID, "outp").click()
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("start-maximized")
-chrome_options.add_argument("--allow-running-insecure-content") 
-chrome_options.add_argument(f"--unsafely-treat-insecure-origin-as-secure=https://{nokia}")
-chrome_options.add_argument("--disable-blink-features")
-chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+  def test_configssend(self):
+    self.driver.find_element(By.ID, "filestyle-0").send_keys("/home/user/nokia-cfgs/dropbear")
+    self.driver.find_element(By.ID, "imp").click()
+    assert self.driver.switch_to.alert.text == "Are you sure to restore configuration file to ONT?"
+    self.driver.switch_to.alert.accept()
+    self.driver.close()
+  
 
-LOGIN_PAGE = nokia
-ACCOUNT = "AdminGPON"
-PASSWORD = "ALC#FGU"
-
-driver = webdriver.Chrome(CHROMEDRIVER_PATH, options=chrome_options)
-driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
-
-driver.get(f"https://{nokia}")
-username = driver.find_element_by_name("name")
-username.send_keys(ACCOUNT)
-password = driver.find_element_by_name("pswd")
-password.send_keys(PASSWORD)
-
-submit_button = driver.find_element_by_name("loginBT")
-submit_button.click()
-
-
-driver.get("")
-text_element = driver.find_elements_by_xpath('//*')
-
-text = text_element
-
-for t in text:
-    print(t.text)
