@@ -86,7 +86,7 @@ else
     echo "Building ipinfo"
     cd $HOME
     if [ ! -d ipinfo-cli ]; then
-        git clone https://github.com/ipinfo/cli ipinfo-cli
+        git clone --depth=1 https://github.com/ipinfo/cli ipinfo-cli
         cd ipinfo-cli
     else
         echo "Git repo already cloned"
@@ -101,7 +101,7 @@ if command -v nmap &> /dev/null; then
 else
     echo "Building nmap"
     cd $HOME
-    git clone https://github.com/nmap/nmap
+    git clone --depth=1 https://github.com/nmap/nmap
     cd nmap
     ./configure
     make
