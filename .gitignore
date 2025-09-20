@@ -1,7 +1,6 @@
-#ignore any tarballs or tar archives
+#ignore any tarballs in .tgz format or tar files. .tar.gz is the format for nmap-files, so allow it
 *.tgz
 *.tar
-*.tar.gz
 #ignore any .swp files
 *.swp
 #ignore .cfg files
