@@ -7,63 +7,69 @@ echo "This will build dependencies from source, which may take a considerable am
 echo "You will need a C/C++ compiler (preferably GCC), Golang, and Cargo (rust) installed to do this, plus any libraries required for each build."
 echo "You will also need python3, git, and GNU make installed."
 echo "Alternatively, you can search your package manager for compiled binaries of these dependencies:"
-printf "${green}ipinfo		nmap		python3 + pycryptodome		urlencode		${clear_color}\n"
-sleep 6
+printf "${green}ipinfo	nmap	python3 + pycryptodome	urlencode${clear_color}\n"
+sleep 2
+confirm() {
+    printf "${green}yes${clear_color}\n"
+}
+deny() {
+    printf "${red}no${clear_color}\n" 
+}
 printf "Checking for C compiler... "
 if command -v cc &> /dev/null; then
-    printf "${green}yes${clear_color}\n"
+	confirm
 else
-    printf "${red}no${clear_color}\n" 
-    echo "Please install a C compiler"
-    exit 1
+    	deny
+	echo "Please install a C compiler"
+    	exit 1
 fi
 printf "Checking for C++ compiler... "
 if command -v c++ &> /dev/null; then
-    printf "${green}yes${clear_color}\n"
+	confirm
 else
-    printf "${red}no${clear_color}\n"
-    echo "Please install a C++ compiler"
-    exit 1
+	deny
+	echo "Please install a C++ compiler"
+	exit 1
 fi
 printf "Checking for Go compiler... "
 if command -v go &> /dev/null; then
-    printf "${green}yes${clear_color}\n"
+	confirm
 else
-    printf "${red}no${clear_color}\n"
-    echo "Please install Golang"
-    exit 1
+    	deny
+	echo "Please install Golang"
+	exit 1
 fi
 printf "Checking for Cargo (Rust package manager)... "
 if command -v cargo &> /dev/null; then
-    printf "${green}yes${clear_color}\n"
+	confirm
 else
-    printf "${red}no${clear_color}\n"
-    echo "Please install Rust"
-    exit 1
+	deny
+	echo "Please install Rust"
+	exit 1
 fi
 printf "Checking for Python3..."
 if command -v python3 &> /dev/null; then
-    printf "${green}yes${clear_color}\n"
+	confirm
 else
-    printf "${red}no${clear_color}\n"
-    echo "Please install python3"
-    exit 1
+	deny
+	echo "Please install python3"
+    	exit 1
 fi
 printf "Checking for make..."
 if command -v make &> /dev/null; then
-    printf "${green}yes${clear_color}\n"
+	confirm
 else
-    printf "${red}no${clear_color}\n"
-    echo "Please install make"
-    exit 1
+	deny
+	echo "Please install make"
+	exit 1
 fi
 printf "Checking for git..."
 if command -v git &> /dev/null; then
-    printf "${green}yes${clear_color}\n"
+	confirm
 else
-    printf "${red}no${clear_color}\n"
-    echo "Please install git"
-    exit 1
+	deny
+	echo "Please install git"
+	exit 1
 fi
 check_local_bin() {
 echo $PATH | grep .local/bin >/dev/null
@@ -76,43 +82,44 @@ else
 fi
 }
 if [ -d $HOME/.local/bin ]; then
-    check_local_bin
+	check_local_bin
 else
-    mkdir -p $HOME/.local/bin
+	echo "Creating directory for local executables at $HOME/.local/bin"
+	mkdir -p $HOME/.local/bin
 fi
 if command -v ipinfo &> /dev/null; then
-    echo "ipinfo already installed!"
+	echo "ipinfo already installed!"
 else
-    echo "Building ipinfo"
-    cd $HOME
-    if [ ! -d ipinfo-cli ]; then
-        git clone --depth=1 https://github.com/ipinfo/cli ipinfo-cli
-        cd ipinfo-cli
-    else
-        echo "Git repo already cloned"
-        cd ipinfo-cli 
-        git pull
-    fi
+	echo "Building ipinfo"
+	cd $HOME
+	if [ ! -d ipinfo-cli ]; then
+        	git clone --depth=1 https://github.com/ipinfo/cli ipinfo-cli
+	        cd ipinfo-cli
+	else
+        	echo "Git repo already cloned"
+        	cd ipinfo-cli 
+        	git pull
+	fi
     go install ./ipinfo/
     ln -s $(pwd)/ipinfo/ipinfo $HOME/.local/bin/ipinfo
 fi
 if command -v nmap &> /dev/null; then
-    echo "nmap already installed!"
+	echo "nmap already installed!"
 else
-    echo "Building nmap"
-    cd $HOME
-    git clone --depth=1 https://github.com/nmap/nmap
-    cd nmap
-    ./configure
-    make
-    ln -s $HOME/nmap/nmap $HOME/.local/bin/nmap
+	echo "Building nmap"
+	cd $HOME
+	curl -fsSL https://nmap.org/dist/nmap-7.98.tar.bz2 | tar xjvf -
+	cd nmap-7.98
+	./configure --without-zenmap --without-nping --without-ndiff --without-ncat
+	make
+	ln -s $HOME/nmap-7.98/nmap $HOME/.local/bin/nmap
 fi
 if command -v urlencode &> /dev/null; then
-    echo "urlencode already installed!"
+	echo "urlencode already installed!"
 else
-    echo "Building urlencode"
-    cargo install urlencode
-    ln -s $HOME/.cargo/bin/urlencode $HOME/.local/bin/urlencode
+	echo "Building urlencode"
+	cargo install urlencode
+	ln -s $HOME/.cargo/bin/urlencode $HOME/.local/bin/urlencode
 fi
 python3 -c "import Crypto" && echo "python Crypto library already installed!" || echo "No python3 module named Crypto found - you can use pip or your package manager but for this one you must manually install it, as we don't want to be responsible for breaking your python installation"
 check_local_bin
