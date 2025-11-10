@@ -88,7 +88,7 @@ else
 	mkdir -p $HOME/.local/bin
 fi
 if command -v ipinfo &> /dev/null; then
-	echo "ipinfo already installed!"
+	printf "${green}ipinfo${clear_color} already installed!\n"
 else
 	echo "Building ipinfo"
 	cd $HOME
@@ -100,11 +100,17 @@ else
         	cd ipinfo-cli 
         	git pull
 	fi
-    go install ./ipinfo/
-    ln -s $(pwd)/ipinfo/ipinfo $HOME/.local/bin/ipinfo
+	go install ./ipinfo/
+	ipinfo_out="$(pwd)/ipinfo/ipinfo"
+	if [ -f "$ipinfo_out" ]; then
+		ln -s $(pwd)/ipinfo/ipinfo $HOME/.local/bin/ipinfo
+	else
+		printf "${red}Building ipinfo failed${clear_color}\n"
+		exit 1
+	fi
 fi
 if command -v nmap &> /dev/null; then
-	echo "nmap already installed!"
+	printf "${green}nmap ${clear_color}already installed!\n"
 else
 	echo "Building nmap"
 	cd $HOME
@@ -112,14 +118,27 @@ else
 	cd nmap-7.98
 	./configure --without-zenmap --without-nping --without-ndiff --without-ncat
 	make
-	ln -s $HOME/nmap-7.98/nmap $HOME/.local/bin/nmap
+	nmap_out="$HOME/nmap-7.98/nmap"
+	if [ -f "$nmap_out" ]; then
+		ln -s $HOME/nmap-7.98/nmap $HOME/.local/bin/nmap
+	else
+		printf "${red}Building nmap failed${clear_color}\n"
+		exit 1
+	fi
 fi
 if command -v urlencode &> /dev/null; then
-	echo "urlencode already installed!"
+	printf "${green}urlencode${clear_color} already installed!\n"
 else
 	echo "Building urlencode"
 	cargo install urlencode
-	ln -s $HOME/.cargo/bin/urlencode $HOME/.local/bin/urlencode
+	urlencode_out="$HOME/.cargo/bin/urlencode"
+	if [ -f "$urlencode_out" ]; then
+		ln -s "$urlencode_out" $HOME/.local/bin/urlencode
+	else
+		printf "${red}Building urlencode failed${clear_color}\n"
+		exit 1
+	fi
+
 fi
-python3 -c "import Crypto" && echo "python Crypto library already installed!" || echo "No python3 module named Crypto found - you can use pip or your package manager but for this one you must manually install it, as we don't want to be responsible for breaking your python installation"
+python3 -c "import Crypto" && printf "python ${green}Crypto${clear_color} library already installed!\n" || echo "No python3 module named Crypto found - you can use pip or your package manager but for this one you must manually install it, as we don't want to be responsible for breaking your python installation"
 check_local_bin
