@@ -95,15 +95,16 @@ else
 	echo "Searching Zoomeye with custom parameters $q64"
 fi
 curl_request() {
-curl -X POST 'https://api.zoomeye.ai/v2/search' -H "API-KEY: $API_KEY" -H 'content-type: application/json' \
+curl -X POST 'https://api.zoomeye.ai/v2/search' \
+    -H "API-KEY: $API_KEY" \
+    -H 'content-type: application/json' \
 	-d '{
 		"qbase64": '"$query"',
 		"page": 1
 		"pagesize": 100000
-	}' \
-		| grep -oE "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" | sort -u | tee $HOME/.tmp/iplist
+	}'
 }
-curl_request
+curl_request | grep -oE "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" | sort -u | tee $HOME/.tmp/iplist
 if ! command -v ipinfo 2>&1 >/dev/null; then
 	if ! command -v geoiplookup 2>&1 >/dev/null; then
 		echo "No geoip tool found"
